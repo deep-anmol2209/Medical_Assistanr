@@ -2,7 +2,7 @@ import { useAuthService } from "./authService";
 import axios from "axios";
 import { useCallback } from "react";
 
-const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
+export const API_BASE_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000/api";
 
 export function useApiManager() {
   const { getToken } = useAuthService();

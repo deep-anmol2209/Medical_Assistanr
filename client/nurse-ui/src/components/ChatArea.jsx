@@ -5,6 +5,7 @@ import { useAuthService } from "../authService";
 import ReactMarkdown from "react-markdown";
 import { useApiManager } from "../apiManager";
 import TextareaAutosize from "react-textarea-autosize";
+import { API_BASE_URL } from "../apiManager";
 import remarkGfm from "remark-gfm";
 
 const medicalQuotes = [
@@ -86,7 +87,7 @@ export default function ChatArea({ conversationId, initialMessages }) {
     setLoading(true);
 
     const token = await getToken();
-    const url = new URL(apiCall("chat/stream", "GET")); 
+    const url = new URL(`${API_BASE_URL}chat/stream`); 
     url.searchParams.append("question", input);
     url.searchParams.append("conversationId", conversationId);
     url.searchParams.append("token", token);
