@@ -17,6 +17,7 @@ export const sendMessageStream = async (req, res) => {
   try {
     ("sendMessageStream called");
     ("Request query:", req.query);
+console.log("Request headers:", req.query);
 
     const clerkUserId = req.user.id; // Clerk middleware
     const { question, conversationId } = req.query;
@@ -26,6 +27,8 @@ export const sendMessageStream = async (req, res) => {
         .json({ error: "userId, question, and conversationId are required" });
     }
 
+    console.log("Authenticated userId:", clerkUserId);
+    
     // --- SSE headers ---
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
@@ -35,6 +38,7 @@ export const sendMessageStream = async (req, res) => {
     // Save user question quickly
     await saveChat(clerkUserId, { role: "user", content: question });
 
+    console.log("Finding or creating conversation:", conversationId);
     // --- Find or Create Conversation ---
     let convoDoc = await Conversation.findOne({ conversationId });
     if (!convoDoc) {
@@ -45,6 +49,8 @@ export const sendMessageStream = async (req, res) => {
       });
     }
 
+    console.log("Conversation document:", convoDoc);
+    
     // --- Store new user message ---
     await Message.create({
       conversationId,
@@ -53,12 +59,15 @@ export const sendMessageStream = async (req, res) => {
       createdAt: new Date(),
     });
 
+    console.log("Message stored, fetching chat history...");
+    
     // --- Context for LLM (last few messages) ---
     const chats = await Message.find({ conversationId }).sort({ createdAt: 1 });
     const formattedChats = chats.map((m) => ({
       role: m.role,
       content: m.content,
     }));
+console.log("Formatted chats:", formattedChats);
 
     // --- Get last summary ---
     const oldSummary = (await getSummary(clerkUserId))?.summary || "";
@@ -68,7 +77,8 @@ export const sendMessageStream = async (req, res) => {
     const contextChunks = await queryPinecone(question);
 
     let answerBuffer = "";
-
+  console.log("Context chunks:", contextChunks);
+  
     // --- Build redis context ---
     const redisContext = `
 Summary of older chats:
@@ -77,6 +87,7 @@ ${oldSummary || "No summary yet"}
 Recent chats:
 ${formattedChats.map((c) => `${c.role}: ${c.content}`).join("\n")}
     `;
+console.log("Redis context:", redisContext);
 
     // --- Stream model response ---
     await askMainModel(
@@ -94,7 +105,10 @@ ${formattedChats.map((c) => `${c.role}: ${c.content}`).join("\n")}
       }
     );
 
+    console.log("Model response complete");
+    
     const finalAnswer = answerBuffer.trim() || "I don't know.";
+console.log("Final answer:", finalAnswer);
 
     // --- Store model reply ---
     await Message.create({
