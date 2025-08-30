@@ -28,7 +28,6 @@ export async function saveSummary(userId, summary) {
     CHAT_SUMMARY_KEY(userId),
     JSON.stringify({ summary, updatedAt: Date.now() })
   );
-  (`Updated summary for ${userId}`);
 }
 
 export async function getSummary(userId) {

@@ -48,8 +48,6 @@ export function detectMode(userInput) {
 }
 
 export async function askMainModel(question,knowledgeContext, chatContext, _mode, onToken) {
-  ("context:", chatContext);
-  ("knowledgeContext:", knowledgeContext);
   
 
   const prompt = PromptTemplate.fromTemplate(`
@@ -94,7 +92,6 @@ Answer (Markdown only, based strictly on context):
     }
   );
 
-  ("response:", res);
   return res.text;
 }
 
