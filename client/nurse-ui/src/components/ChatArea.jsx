@@ -3,6 +3,7 @@ import { FiSend, FiUser, FiCpu } from "react-icons/fi";
 import React from "react";
 import { useAuthService } from "../authService";
 import ReactMarkdown from "react-markdown";
+import { useApiManager } from "../apiManager";
 import TextareaAutosize from "react-textarea-autosize";
 import remarkGfm from "remark-gfm";
 
@@ -34,6 +35,7 @@ const medicalQuotes = [
 ];
 
 export default function ChatArea({ conversationId, initialMessages }) {
+  const { apiCall } = useApiManager();
   const [conversations, setConversations] = useState({});
   const { getToken } = useAuthService();
   const [input, setInput] = useState("");
@@ -84,7 +86,7 @@ export default function ChatArea({ conversationId, initialMessages }) {
     setLoading(true);
 
     const token = await getToken();
-    const url = new URL("http://localhost:4000/api/chat/stream");
+    const url = new URL(apiCall("/chat/stream", "GET")); 
     url.searchParams.append("question", input);
     url.searchParams.append("conversationId", conversationId);
     url.searchParams.append("token", token);
