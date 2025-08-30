@@ -87,7 +87,7 @@ export default function ChatArea({ conversationId, initialMessages }) {
     setLoading(true);
 
     const token = await getToken();
-    const url = new URL(`${API_BASE_URL}chat/stream`); 
+    const url = new URL(`${API_BASE_URL}/chat/stream`); 
     url.searchParams.append("question", input);
     url.searchParams.append("conversationId", conversationId);
     url.searchParams.append("token", token);
