@@ -10,7 +10,9 @@ const redisConfig = {
 
 const redis = new Redis(redisConfig);
 
-redis.on('connect', () =>('Redis connected'));
-redis.on('error', err => ('Redis error:', err));
+redis.on('connect', () =>( console.log(
+'Redis connected')));
+
+redis.on('error', err => (console.log('Redis error:'), err));
 
 export default redis;

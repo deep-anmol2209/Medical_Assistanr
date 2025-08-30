@@ -15,8 +15,6 @@ import { clerkClient, getAuth } from "@clerk/express";
 // ================== STREAM MESSAGE ==================
 export const sendMessageStream = async (req, res) => {
   try {
-    ("sendMessageStream called");
-    ("Request query:", req.query);
 console.log("Request headers:", req.query);
 
     const clerkUserId = req.user.id; // Clerk middleware
@@ -127,8 +125,6 @@ console.log("Final answer:", finalAnswer);
       role: "assistant",
       content: finalAnswer,
     });
-
-    ("Final Answer:", finalAnswer);
 
     // --- Background summary update ---
     (async () => {

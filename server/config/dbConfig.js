@@ -16,13 +16,13 @@ const connectDB = async () => {
       useUnifiedTopology: true,
     });
     isConnected = true;
-    (' MongoDB connected');
+    console.log(' MongoDB connected');
   } catch (error) {
     console.error(' MongoDB connection error:', error);
   }
 
   mongoose.connection.on('connected', () => {
-    (' Mongoose connection open');
+    console.log(' Mongoose connection open');
   });
 
   mongoose.connection.on('error', (err) => {
@@ -35,7 +35,7 @@ const connectDB = async () => {
 
   process.on('SIGINT', async () => {
     await mongoose.connection.close();
-    (' Mongoose connection closed on app termination');
+    console.log(' Mongoose connection closed on app termination');
     process.exit(0);
   });
 };
