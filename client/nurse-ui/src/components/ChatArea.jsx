@@ -268,7 +268,7 @@ export default function ChatArea({ conversationId, initialMessages }) {
             </div>
           </div>
           {/* Input at bottom, glassmorphism */}
-          <div className="fixed bottom-0 left-0 w-full px-0 lg:py-4 py-1 bg-[#00415a] backdrop-blur-lg border-t shadow-2xl z-20">
+          <div className="fixed bottom-0 left-0 w-full lg:px-0 px-2 lg:py-4 py-1 bg-[#00415a] backdrop-blur-lg border-t shadow-2xl z-20">
             {inputArea}
           </div>
         </>
