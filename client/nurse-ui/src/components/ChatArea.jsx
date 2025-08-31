@@ -159,7 +159,7 @@ export default function ChatArea({ conversationId, initialMessages }) {
         e.preventDefault();
         handleSend();
       }}
-      className="w-full max-w-2xl mx-auto px-4 py-3 border-t-0 bg-white/80 rounded-2xl shadow-lg backdrop-blur-lg"
+      className="w-full max-w-2xl mx-auto lg:px-4 lg:py-3 px-2 py-2 border-t-0 bg-white/80 rounded-2xl shadow-lg backdrop-blur-lg"
     >
       <div className="relative flex items-center">
         <TextareaAutosize
@@ -176,7 +176,7 @@ export default function ChatArea({ conversationId, initialMessages }) {
         <button
           type="submit"
           disabled={loading || !input.trim()}
-          className="absolute right-3 bottom-2 rounded-full bg-gradient-to-br from-[#00b7c2] to-[#00415a] hover:scale-105 hover:brightness-110 active:scale-95 text-white p-4 transition shadow-xl focus:outline-none focus:ring-2 focus:ring-[#00b7c2]"
+          className="absolute right-3 bottom-2 rounded-full bg-gradient-to-br from-[#00b7c2] to-[#00415a] hover:scale-105 hover:brightness-110 active:scale-95 text-white p-4  transition shadow-xl focus:outline-none focus:ring-2 focus:ring-[#00b7c2]"
           title="Send"
         >
           <FiSend className="text-xl" />
@@ -199,7 +199,7 @@ export default function ChatArea({ conversationId, initialMessages }) {
 
       {!chatStarted ? (
         <div className="relative z-10 flex-1 flex flex-col items-center justify-center">
-          <div className="mb-12 w-full max-w-lg text-center select-none">
+          <div className="mb-12 p-4 w-full max-w-lg text-center select-none">
             <figure className="bg-white/90 shadow-2xl rounded-2xl px-8 py-10 border border-[#e3f6f5] backdrop-blur-lg">
               <blockquote className="text-2xl md:text-3xl font-semibold italic text-[#00415a] drop-shadow-md">
                 “{quote.quote}”
@@ -209,7 +209,7 @@ export default function ChatArea({ conversationId, initialMessages }) {
               </figcaption>
             </figure>
           </div>
-          <div className="w-full">{inputArea}</div>
+          <div className="w-full p-4">{inputArea}</div>
         </div>
       ) : (
         <>
