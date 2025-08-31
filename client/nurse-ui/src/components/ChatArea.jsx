@@ -67,6 +67,7 @@ export default function ChatArea({ conversationId, initialMessages }) {
     }
   }, [messages, chatStarted]);
 
+
   const updateMessages = (updater) => {
     setConversations((prev) => {
       const current = prev[conversationId] || [];
@@ -141,6 +142,15 @@ export default function ChatArea({ conversationId, initialMessages }) {
       handleSend();
     }
   };
+  function LoadingIndicator() {
+    return (
+      <div className="flex items-center justify-center py-6">
+        <span className="animate-spin rounded-full h-8 w-8 border-t-4 border-[#00b7c2] border-opacity-60" />
+        <span className="ml-3 text-[#00b7c2] font-semibold">Awaiting response...</span>
+      </div>
+    );
+  }
+  
 
   // Enhanced Input Area styling (modern UI)
   const inputArea = (
@@ -209,12 +219,12 @@ export default function ChatArea({ conversationId, initialMessages }) {
               {messages.map((msg, i) => (
                <div
                  key={i}
-                 className={`flex items-start lg:gap-4 gap-1 ${
+                 className={`flex items-start lg:gap-4 p-2  gap-1 ${
                    msg.sender === "user" ? " flex-row-reverse" : "justify-start flex-row"
                  }`}
                >
                   {msg.sender === "bot" && (
-                   <span className="rounded-full lg:p-2 px-1 py-1  bg-[#0e5089] text-white shadow-lg shrink-0 border-[3px] border-white">
+                   <span className="rounded-full lg:p-2 px-1 py-1 lg:block hidden bg-[#0e5089] text-white shadow-lg shrink-0 border-[3px] border-white">
                      <FiCpu className="text-2xl" />
                    </span>
                  )}
@@ -229,10 +239,10 @@ export default function ChatArea({ conversationId, initialMessages }) {
                  {/* Message bubble */}
                  <div
                    className={`
-                      lg:px-6 px-1 lg:py-4 py-1 rounded-2xl  text-base max-w-[100%] 
+                      px-4 py-4  rounded-2xl  text-base max-w-[100%] 
                       ${
                         msg.sender === "bot"
-                          ? " text-[#ffffff] "
+                          ? " text-[#ffffff] bg-[#4e4a4a] "
                           : "bg-gradient-to-tl from-[#00b7c2] px-4 py-2 shadow-lg to-[#00415a] text-white border-[#00b7c2]"
                       }
                    `}
@@ -253,6 +263,7 @@ export default function ChatArea({ conversationId, initialMessages }) {
                  
                </div>
               ))}
+              {loading && <LoadingIndicator />}
               <div ref={messagesEndRef} />
             </div>
           </div>

@@ -37,7 +37,6 @@ function ChatWrapper() {
           const data = await apiCall(
             `chat/getMessagesByConversation?conversationId=${routeConversationId}`
           );
-          ("Messages fetched:", data.messages);
           setMessages(
             (data.messages || []).map((m) => ({
               sender: m.role === "assistant" ? "bot" : "user",
