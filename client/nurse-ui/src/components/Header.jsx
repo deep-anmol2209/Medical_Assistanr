@@ -30,7 +30,7 @@ const Header = ({ setIsOpen, onLogout, isOpen }) => {
       <div>
       <button
         onClick={()=> logout()}
-        className="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold px-4 py-2 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-red-400 transition"
+        className="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white font-semibold lg:px-4 lg:py-2 py-1 rounded-md shadow-md focus:outline-none focus:ring-2 focus:ring-red-400 transition px-2"
       >
         Logout
       </button>

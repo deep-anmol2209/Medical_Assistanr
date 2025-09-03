@@ -22,18 +22,29 @@ function ChatWrapper() {
   const { conversationId: routeConversationId } = useParams();
   const navigate = useNavigate();
   const { apiCall } = useApiManager();
-
+  // 1. Manage conversations here
+  const [conversations, setConversations] = useState([]); // All chats
   const [messages, setMessages] = useState([]);
- const  [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
+  // Fetch conversations when the component mounts or a new chat is added
   useEffect(() => {
-    ("useEffect triggered");
-    ("routeConversationId:", routeConversationId);
+    async function fetchConversations() {
+      try {
+        const data = await apiCall("chat/getChatById");
+        setConversations(data.chats || []);
+      } catch (err) {
+        console.error("Error fetching chats:", err);
+      }
+    }
+    fetchConversations();
+  }, []);
 
+  // Fetch messages when conversationId changes
+  useEffect(() => {
     if (routeConversationId) {
       (async () => {
         try {
-          (`Fetching messages for conversationId: ${routeConversationId}`);
           const data = await apiCall(
             `chat/getMessagesByConversation?conversationId=${routeConversationId}`
           );
@@ -50,38 +61,38 @@ function ChatWrapper() {
         }
       })();
     } else {
-      ("No routeConversationId found, generating new UUID and navigating.");
       const newId = uuidv4();
       navigate(`/chat/${newId}`, { replace: true });
     }
-  }, [routeConversationId, navigate]);
+  }, [routeConversationId]);
 
-  // Handler for chat selection
-  const handleSelectChat = (id) => {
-    ("handleSelectChat called with id:", id);
-    if (id !== routeConversationId) {
-      ("Navigating to new conversation id:", id);
-      navigate(`/chat/${id}`, { replace: true });
-    } else {
-      ("Selected conversation is same as current route, no navigation.");
-    }
-  };
-
-  // Handler for new chat creation
+  // Handler for new chat creation (add both locally and on backend)
   const handleNewChat = () => {
     const newId = uuidv4();
-    ("handleNewChat called, navigating to new conversation id:", newId);
+    // Optimistically add new chat locally 
+    setConversations(prev => [...prev, { conversationId: newId, title: "New Chat" }]);
+    // Navigate to new chat route
     navigate(`/chat/${newId}`, { replace: true });
+  };
+  // Handler for chat selection
+  const handleSelectChat = (id) => {
+    if (id !== routeConversationId) {
+      navigate(`/chat/${id}`, { replace: true });
+    }
   };
 
   return (
     <div className="flex h-screen flex-col">
       <Header setIsOpen={setIsOpen} isOpen={isOpen}/>
       <div className="flex flex-1 overflow-hidden">
-        
-          <Sidebar onNewChat={handleNewChat} setIsOpen={setIsOpen} isOpen={isOpen} onSelectChat={handleSelectChat} />
-        
-        <main className="flex-1  overflow-hidden">
+        <Sidebar
+          onNewChat={handleNewChat}
+          setIsOpen={setIsOpen}
+          isOpen={isOpen}
+          onSelectChat={handleSelectChat}
+          conversations={conversations} // Pass shared, up-to-date conversations here
+        />
+        <main className="flex-1 overflow-hidden">
           <ChatArea
             conversationId={routeConversationId}
             initialMessages={messages}
@@ -111,11 +122,9 @@ function App() {
             </>
           }
         />
-
         {/* Public routes */}
         <Route path="/sign-up/*" element={<Signup />} />
         <Route path="/sign-in/*" element={<Signin />} />
-
         {/* Protected Chat Layout with conversationId in URL */}
         <Route
           path="/chat/:conversationId?" // optional param
